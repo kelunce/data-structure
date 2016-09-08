@@ -2,7 +2,7 @@
 #include "CPPString.h"
 using namespace std;
 
-void main()
+int main()
 {
 	CPPString a, b, c('a');
 	a = "behind";
@@ -11,7 +11,15 @@ void main()
 	cout << b << endl;
 	a[0] = 'r';
 	cout << a << endl;
-	system("pause");
-	return;
+	
+    #ifdef _MSC_VER	
+    system("pause");
+    #else
+    char y;
+    cout<<"enter any key to exit";
+    cin>>y;
+    #endif
+
+	return 0;
 }
 

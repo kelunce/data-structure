@@ -43,7 +43,11 @@ public:
 	// 返回对象的类型写在operator后!, 这个和其他操作符不同
 	// 而且这里必须声明explicit,强调这个强制转换函数只能显式调用, 不能默认调用!!!
 	// 如果可以默认调用, 那么功能将和operator [] 重复, 而引起调用的二意性!
-	explicit operator char*() const;
+    #ifdef _MSC_VER	
+    explicit operator char*() const;
+    #else
+    operator char*() const;
+    #endif
 
 	// 支持a[1] = '2';
 	// 留意怎么返回引用

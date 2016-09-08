@@ -167,7 +167,8 @@ CPPSubString CPPString::operator()(unsigned index, unsigned len)
 	int maxLen = length() - index;
 	len = len > maxLen ? maxLen : len;
 	// 把自己传递给子串对象
-	return CPPSubString(*this, index, len);
+	CPPString &base = *this;
+    return CPPSubString(base, index, len);
 }
 
 std::istream & CPPString::getline(std::istream &in)
