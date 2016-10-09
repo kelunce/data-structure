@@ -43,6 +43,7 @@ public:
 	// 返回对象的类型写在operator后!, 这个和其他操作符不同
 	// 而且这里必须声明explicit,强调这个强制转换函数只能显式调用, 不能默认调用!!!
 	// 如果可以默认调用, 那么功能将和operator [] 重复, 而引起调用的二意性!
+	// C++11开始explicit才可以修饰非构造函数
 	explicit operator char*() const;
 
 	// 支持a[1] = '2';

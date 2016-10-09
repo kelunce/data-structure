@@ -83,7 +83,7 @@ int CPPString::compare(const CPPString &val) const
 {
 	char *p = buffer;
 	const char *q = (const char*)val;
-	for (; (*p != '\0') && (*p = *q); p++, q++);
+	for (; (*p != '\0') && (*p == *q); p++, q++);
 	return *p - *q;
 }
 
