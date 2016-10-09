@@ -1,4 +1,5 @@
 #include "StringMatcher.h"
+#include <assert.h>
 
 StringMatcher::StringMatcher(CPPString &t):text(t),pos(0)
 {
@@ -69,3 +70,65 @@ int SimpleStrMatcher::operator++()
 	return 0;
 }
 
+// 根据模式串计算出前缀数组
+KMPStrMatcher::KMPStrMatcher(const CPPString & p, CPPString & text):
+	StringMatcher(text),pattern(p)
+{
+	
+	patlen = p.length();
+	assert(patlen > 0);
+
+	prefix = new int[patlen];
+	assert(prefix != 0);
+	// 第一个字符时j肯定为0
+	prefix[0] = 0;
+
+	for (int i = 1; i < patlen; i++)
+	{
+		// 是否可以继续
+		int k = prefix[i - 1];
+		while (pattern[i] != pattern[k] && k != 0)
+		{
+			// 如果不能继续,则可以利用上个字符的最大前缀N,此时必定不会超过N了
+			k = prefix[k - 1];
+		}
+		// 如果可以继续,则递加
+		if (pattern[i] == pattern[k])
+			prefix[i] = k + 1;
+		else
+			prefix[i] = 0;
+	}
+}
+
+KMPStrMatcher::~KMPStrMatcher()
+{
+	delete []prefix;
+}
+
+int KMPStrMatcher::operator++()
+{
+	int end = text.length();
+	int cur = pos + 1; // 正文游标, 只会递增
+	int patp = 0; // 模式中的位置
+	for (; cur < end; cur++)
+	{
+		while (patp > 0 && pattern[patp] != text[cur])
+		{
+			patp = prefix[patp - 1];
+		}
+
+		if (pattern[patp] == text[cur])
+		{
+			patp++;
+			if (patp == patlen) 
+			{
+				// 发现匹配项
+				pos = 1 + cur - patlen;
+				return 1;
+			}
+		}
+	}
+	// 没有更多的匹配
+	pos = -1;
+	return 0;
+}

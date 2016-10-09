@@ -26,9 +26,21 @@ void testSimpleStrMatcher()
 	}
 }
 
+void testKMPStrMatcher()
+{
+	CPPString text = "pattern match";
+	CPPString pat = "at";
+	//SimpleStrMatcher mat("at", text);// 临时构造的at字串会被释放!!
+	KMPStrMatcher mat(pat, text);
+	for (mat.init(); !mat; ++mat)
+	{
+		cout << "found match at:" << mat.position() << endl;
+	}
+}
+
 void main()
 {
-	testSimpleStrMatcher();
+	testKMPStrMatcher();
 	system("pause");
 	return;
 }
