@@ -103,6 +103,22 @@ private:
 	const unsigned len;
 };
 
+
+
+/*  ²âÊÔ´úÂë
+void testCppstring()
+{
+CPPString a, b, c('a');
+a = "behind";
+cout << a << endl;
+b = a(1, 4);
+cout << b << endl;
+a[0] = 'r';
+cout << a << endl;
+}
+
+
+*/
 #endif // !__CPPSTRING_H__
 
 

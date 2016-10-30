@@ -132,3 +132,42 @@ int KMPStrMatcher::operator++()
 	pos = -1;
 	return 0;
 }
+
+BMStrMatcher::BMStrMatcher(const CPPString & pattern, CPPString & text)
+	:StringMatcher(text),mPattern(pattern)
+{
+	patlen = mPattern.length();
+	for (int i = 0; i < 256; i++)
+	{
+		mPosition[i] = 0;
+	}
+	for (int j = 0; mPattern[j]; j++)
+	{
+		// 如果模式中有相同的字符，以最后次出现的字符为准。
+		mPosition[mPattern[j]] = j;
+	}
+}
+
+int BMStrMatcher::operator++()
+{
+	pos += 1;
+	int end = text.length() - patlen;
+	int tmp = 0;
+	while (pos <= end)
+	{
+		int j = patlen - 1;
+		while (j >= 0 && text[pos + j] == mPattern[j])
+			j--;
+		if (j < 0) return 1; // 匹配成功
+		// 步长最少增加1
+		tmp = j - mPosition[text[pos + j]];
+		if (tmp < 1) tmp = 1;
+		pos += tmp;
+	}
+	pos = -1;
+	return 0;
+}
+
+BMStrMatcher::~BMStrMatcher()
+{
+}

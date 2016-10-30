@@ -52,7 +52,7 @@ private:
 /*
   KMP算法,利用模式串(重复性)特征提高效率, 复杂度为O(m+n), n和m分别是正文字串和模式串的长度
   这是一种无回溯的字符串匹配算法(正文字符串的检查始终向前进展,即正文字符串中的每个字符只检查一次)
-  适用于字符集小的文本匹配
+  适用于字符集小的文本匹配, 比如DNA片段搜索（DNA字符集只有4个）
  */
 class KMPStrMatcher : public StringMatcher
 {
@@ -76,3 +76,70 @@ private:
 	// 前缀数组用于指示当字符匹配出现失败时应如何处理
 	// 比如匹配到第11位时发现失败, 那么可以从模式串的第4个字符串往下比较
 };
+
+/* 每次模式串比较时，从右往左比较。如果发现不相等字符，则跳跃一次，跳跃步长规则：
+	1. 如果不匹配的正文字符在模式串中存在，则根据mPosition数值作为步长跳跃。
+	2. 如果不匹配的正文字符在模式串中不存在，则从正文当前字符的下一个字符开始重新匹配。
+	3. 当模式串中的某字符在正文串中中出现多次，可能导致步长为负数！为避免这种往回走，限制步长大于0
+	复杂度最优是O(n/m)，最差是O(mn)，平均是O(n)
+*/
+class BMStrMatcher : public StringMatcher
+{
+public:
+	BMStrMatcher(const CPPString &pattern, CPPString & text);
+	virtual int operator ++();
+	~BMStrMatcher ();
+
+private:
+	const CPPString &mPattern;
+	short int mPosition[256];
+};
+
+/* 测试代码
+void testSimpleStrMatcher()
+{
+CPPString text = "pattern match";
+CPPString pat = "at";
+//SimpleStrMatcher mat("at", text);// 临时构造的at字串会被释放!!
+SimpleStrMatcher mat(pat, text);
+for (mat.init(); !mat; ++mat)
+{
+cout << __func__ << " found match at:" << mat.position() << endl;
+}
+}
+
+void testKMPStrMatcher()
+{
+CPPString text = "pattern match";
+CPPString pat = "at";
+//SimpleStrMatcher mat("at", text);// 临时构造的at字串会被释放!!
+KMPStrMatcher mat(pat, text);
+for (mat.init(); !mat; ++mat)
+{
+cout << __func__ << " found match at:" << mat.position() << endl;
+}
+}
+
+void testBMStrMatcher()
+{
+CPPString text = "pattern match";
+CPPString pat = "at";
+//SimpleStrMatcher mat("at", text);// 临时构造的at字串会被释放!!
+BMStrMatcher mat(pat, text);
+for (mat.init(); !mat; ++mat)
+{
+cout << __func__ << " found match at:" << mat.position() << endl;
+}
+}
+
+void main()
+{
+testSimpleStrMatcher();
+testKMPStrMatcher();
+testBMStrMatcher();
+system("pause");
+return;
+}
+
+
+*/
