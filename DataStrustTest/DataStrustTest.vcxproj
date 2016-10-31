@@ -113,10 +113,12 @@
     <ClCompile Include="CPPString.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StringMatcher.cpp" />
+    <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CPPString.h" />
     <ClInclude Include="StringMatcher.h" />
+    <ClInclude Include="vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
