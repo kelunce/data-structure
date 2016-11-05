@@ -51,6 +51,8 @@ StringMatcher::~StringMatcher()
 	//nothing
 }
 
+// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
+// 而且必须在初始化列表中！
 SimpleStrMatcher::SimpleStrMatcher(const CPPString & pat, CPPString & text):
 	StringMatcher(text),pattern(pat)
 {
@@ -71,6 +73,8 @@ int SimpleStrMatcher::operator++()
 }
 
 // 根据模式串计算出前缀数组
+// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
+// 而且必须在初始化列表中！
 KMPStrMatcher::KMPStrMatcher(const CPPString & p, CPPString & text):
 	StringMatcher(text),pattern(p)
 {
@@ -133,6 +137,9 @@ int KMPStrMatcher::operator++()
 	return 0;
 }
 
+
+// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
+// 而且必须在初始化列表中！
 BMStrMatcher::BMStrMatcher(const CPPString & pattern, CPPString & text)
 	:StringMatcher(text),mPattern(pattern)
 {

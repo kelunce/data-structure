@@ -62,3 +62,20 @@ protected:
 };
 
 void Test_BoundVector();
+
+
+/*
+   枚举向量：可以用枚举变量作为下标的数组,这里仅支持从0开始顺序枚举的变量
+*/
+
+template <class E, class T>
+class enumVector:public Vector<T>
+{
+public:
+	enumVector(E max);
+	enumVector(const enumVector &v);
+
+	T& operator[](E index);
+};
+
+void Test_EnumVector();

@@ -119,7 +119,8 @@ unsigned Vector<T>::setSize(unsigned numOfElements, T initValue)
 }
 
 
-
+// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
+// 而且必须在初始化列表中！
 template<class T>
 inline CBoundedVector<T>::CBoundedVector(int low, int numOfElements):
 	lowbound(low), Vector<T>(numOfElements)
@@ -161,8 +162,25 @@ inline int CBoundedVector<T>::upperBound() const
 }
 
 
+// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
+// 而且必须在初始化列表中！
+template<class E, class T>
+inline enumVector<E, T>::enumVector(E max) :Vector<T>(1 + int(max))
+{
+	
+}
 
+template<class E, class T>
+inline enumVector<E, T>::enumVector(const enumVector & v)
+{
+	::Vector<T>(v);
+}
 
+template<class E, class T>
+inline T & enumVector<E, T>::operator[](E index)
+{
+	return Vector<T>::operator[](int(index));
+}
 
 
 
@@ -230,6 +248,22 @@ void Test_BoundVector()
 		for (char c = 'a'; c <= 'z'; c++)
 		{
 			std::cout << "letter "<< c << " occurrences " << counts[c] << " times \n";
+
+
 		}
 	}
+}
+
+enum colors {red, orange, yellow, green, blue};
+void Test_EnumVector()
+{
+	enumVector<colors, double> data(blue);
+	data[blue] = 1.414;
+	data[red] = 1.732;
+	data[green] = data[blue] + 1.02;
+	std::cout << "red: " << data[red] <<
+		" orange: " << data[orange] <<
+		" yellow: " << data[yellow] <<
+		" green : " << data[green] <<
+		" blue :" << data[blue] << "\n";
 }

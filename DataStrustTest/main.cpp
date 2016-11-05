@@ -5,7 +5,8 @@ using namespace std;
 
 void main()
 {
-	Test_BoundVector();
+	//Test_BoundVector();
+	Test_EnumVector();
 	system("pause");
 	return;
 }
