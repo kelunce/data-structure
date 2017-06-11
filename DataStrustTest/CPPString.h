@@ -11,6 +11,7 @@ class CPPString
 public:
 	// 建立空字符串, 长度只有1字节
 	// 一般都需要自己定制默认构造函数，因为如果不定义，编译器会自己生成
+	// 编译器默认会自动生成Default constructors！ C++11 支持不生成： ClassName() = delete ;
 	CPPString();
 	// 支持CPPString a = 'a';
 	CPPString(char);

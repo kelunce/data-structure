@@ -1,197 +1,8 @@
 #include "vector.h"
-#include <assert.h>
-
-
-template<class T> 
-Vector<T>::Vector(unsigned numElements):size(numElements)
-{
-	data = new T[size];
-	assert(data != 0);
-}
-
-template<class T>
-Vector<T>::Vector(unsigned numElements, T initValue) :size(numElements)
-{
-	data = new T[size];
-	assert(data != 0);
-
-	for (int i = 0; i < size; i++)
-	{
-		data[i] = initValue;
-	}
-}
-
-template<class T>
-Vector<T>::Vector(const Vector<T>& source):size(source.length())
-{
-	data = new T[size];
-	assert(data != 0);
-
-	for (int i = 0; i < size; i++)
-	{
-		data[i] = source[i];
-	}
-}
-
-template<class T>
-Vector<T>::~Vector()
-{
-	delete[] data;
-	data = 0;
-	size = 0;
-}
-
-template<class T>
-T & Vector<T>::operator[](unsigned index) const
-{
-	// 这里是unsigned，无需判断负数
-	assert(index < size);
-	return data[index];
-}
-
-template<class T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& source)
-{
-	if (size != source.length()) 
-	{
-		// new buffer
-		T *np = new T[source.length()];
-		assert(np != 0);
-		// free old buffer
-		delete[] data;
-		// save new buffer
-		size = source.length();
-		data = np;
-	}
-	// copy data
-	for (int i = 0; i < size; i++)
-	{
-		data[i] = source[i];
-	}
-	return *this;
-}
-
-template<class T>
-unsigned Vector<T>::length() const
-{
-	return size;
-}
-
-template<class T>
-unsigned Vector<T>::setSize(unsigned numOfElements)
-{
-	if (size != numOfElements)
-	{
-		// new buffer
-		T *np = new T[numOfElements];
-		assert(np != 0);
-
-		// copy old data, how much?
-		int n = numOfElements > size ? size : numOfElements;
-		for (int i = 0; i < n; i++)
-		{
-			np[i] = data[i];
-		}
-
-		// free old buffer
-		delete[] data;
-		// save new buffer
-		size = numOfElements;
-		data = np;
-	}
-	return size;
-}
-
-template<class T>
-unsigned Vector<T>::setSize(unsigned numOfElements, T initValue)
-{
-	int oldSize = size;
-	setSize(numOfElements);
-	// 如果是增长，则增长的元素值为设定参数initValue
-	if (numOfElements > oldSize)
-	{
-		for (i = oldSize; i < size; i++)
-		{
-			data[i] = initValue;
-		}
-	}
-	return size;
-}
-
-
-// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
-// 而且必须在初始化列表中！
-template<class T>
-inline CBoundedVector<T>::CBoundedVector(int low, int numOfElements):
-	lowbound(low), Vector<T>(numOfElements)
-{
-	// 构造时必须先构造父类数据
-}
-
-template<class T>
-inline CBoundedVector<T>::CBoundedVector(int low, int numOfElements, T & initValue):
-	lowbound(low), Vector<T>(numOfElements, initValue)
-{
-	// 构造时必须先构造父类数据
-}
-
-template<class T>
-inline CBoundedVector<T>::CBoundedVector(const CBoundedVector<T>& source):
-	lowbound(source.lowerBound()), Vector<T>(source)
-{
-	// 构造时必须先构造父类数据
-}
-
-template<class T>
-inline T & CBoundedVector<T>::operator[](int index) const
-{
-	// 调用父类函数，操作符函数
-	return Vector<T>::operator[](index - lowbound);
-}
-
-template<class T>
-inline int CBoundedVector<T>::lowerBound() const
-{
-	return lowbound;
-}
-
-template<class T>
-inline int CBoundedVector<T>::upperBound() const
-{
-	return lowbound + Vector<T>::length() - 1;
-}
-
-
-// 这里必须显示调用父类指定参数的构造函数，防止调用自动生成的父类无参构造
-// 而且必须在初始化列表中！
-template<class E, class T>
-inline enumVector<E, T>::enumVector(E max) :Vector<T>(1 + int(max))
-{
-	
-}
-
-template<class E, class T>
-inline enumVector<E, T>::enumVector(const enumVector & v)
-{
-	::Vector<T>(v);
-}
-
-template<class E, class T>
-inline T & enumVector<E, T>::operator[](E index)
-{
-	return Vector<T>::operator[](int(index));
-}
-
-
-
-
-
-
-
-
-
 #include "CPPString.h"
+#include "Iterator.h"
 #include <iostream>
+using namespace std;
 
 static void wordLengthFreq(Vector<int> &counts)
 {
@@ -266,4 +77,29 @@ void Test_EnumVector()
 		" yellow: " << data[yellow] <<
 		" green : " << data[green] <<
 		" blue :" << data[blue] << "\n";
+}
+
+#include <time.h>  
+void TestVectorSort()
+{
+	int size = 10;
+	Vector<double> dbvec(size);
+
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < size; ++i)
+	{
+		dbvec[i] = rand()%100;
+	}
+
+	//BinaryInsertSort(dbvec);
+	//InsertionSort(dbvec);
+	//ShellSort(dbvec);
+	//QuickSort(dbvec);
+	SelectionSort(dbvec);
+
+	VectorIterator<double> iter(dbvec);
+	for (iter.init(); !iter; ++iter)
+	{
+		cout << iter() << '\n';
+	}
 }
